@@ -9,7 +9,9 @@ export async function attachUser(
   res: Response,
   next: NextFunction
 ) {
-  const clerkId = req.auth.userId;
+  const clerkId = req.auth?.userId;
+
+  if (!clerkId) return res.status(401).json({ error: "Unauthorized" });
 
   const user = await db.query.users.findFirst({
     where: eq(users.clerk_user_id, clerkId),
