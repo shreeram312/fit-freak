@@ -1,6 +1,7 @@
 import { Slot } from "expo-router";
 import { useFonts } from "expo-font";
 import { FontFamily } from "@/lib/constants";
+import { ClerkProvider } from "@clerk/clerk-expo";
 
 export default function RootLayout() {
   const [loaded, error] = useFonts({
@@ -28,5 +29,11 @@ export default function RootLayout() {
     return null;
   }
 
-  return <Slot />;
+  return (
+    <ClerkProvider
+      publishableKey={process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY}
+    >
+      <Slot />
+    </ClerkProvider>
+  );
 }

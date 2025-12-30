@@ -4,7 +4,9 @@ import Onboarding from "react-native-onboarding-swiper";
 import LottieView from "lottie-react-native";
 import { Colors } from "@/lib/constants";
 
+import { router, useRouter } from "expo-router";
 const OnboardingScreen = () => {
+  const router = useRouter();
   return (
     <View style={styles.container}>
       <Onboarding
@@ -61,6 +63,10 @@ const OnboardingScreen = () => {
           },
         ]}
         // bottomBarColor="black"
+        onSkip={() => router.push("/sign-in")}
+        onDone={() => {
+          router.push("/sign-in");
+        }}
       />
     </View>
   );
