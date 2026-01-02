@@ -63,9 +63,9 @@ const OnboardingScreen = () => {
           },
         ]}
         // bottomBarColor="black"
-        onSkip={() => router.push("/sign-in")}
+        onSkip={() => router.push("/(auth)/sign-in")}
         onDone={() => {
-          router.push("/sign-in");
+          router.push("/(auth)/sign-in");
         }}
       />
     </View>

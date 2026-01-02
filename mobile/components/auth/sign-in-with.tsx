@@ -3,12 +3,10 @@ import * as WebBrowser from "expo-web-browser";
 import * as AuthSession from "expo-auth-session";
 import { useEffect, useCallback } from "react";
 import { useSSO } from "@clerk/clerk-expo";
-
 import googleButton from "@/assets/social-providers/google.png";
-import facebookButton from "@/assets/social-providers/facebook.png";
-import appleButton from "@/assets/social-providers/apple.png";
-import { Pressable, Image } from "react-native";
+import { Pressable, Image, Text, StyleSheet, View } from "react-native";
 import { router, useRouter } from "expo-router";
+import { Colors, FontFamily } from "@/lib/constants";
 export const useWarmUpBrowser = () => {
   useEffect(() => {
     // Preloads the browser for Android devices to reduce authentication load time
@@ -25,13 +23,11 @@ export const useWarmUpBrowser = () => {
 WebBrowser.maybeCompleteAuthSession();
 
 type SignInWithProps = {
-  strategy: "oauth_google" | "oauth_apple" | "oauth_facebook";
+  strategy: "oauth_google";
 };
 
 const strategyIcons = {
   oauth_google: googleButton,
-  oauth_apple: appleButton,
-  oauth_facebook: facebookButton,
 };
 
 export default function SignInWith({ strategy }: SignInWithProps) {
@@ -71,12 +67,55 @@ export default function SignInWith({ strategy }: SignInWithProps) {
   }, []);
 
   return (
-    <Pressable onPress={onPress}>
-      <Image
-        source={strategyIcons[strategy]}
-        style={{ width: 62, height: 62 }}
-        resizeMode="contain"
-      />
+    <Pressable
+      onPress={onPress}
+      style={({ pressed }) => [
+        styles.horizontalBar,
+        pressed && styles.horizontalBarPressed,
+      ]}
+    >
+      <View style={styles.barContent}>
+        <Image
+          source={strategyIcons[strategy]}
+          style={styles.icon}
+          resizeMode="contain"
+        />
+        <Text style={styles.barText}>Continue with Google</Text>
+      </View>
     </Pressable>
   );
 }
+
+const styles = StyleSheet.create({
+  horizontalBar: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: Colors.white,
+    borderWidth: 1,
+    borderColor: Colors.border,
+    borderRadius: 12,
+    paddingVertical: 14,
+    paddingHorizontal: 16,
+    width: "100%",
+  },
+  horizontalBarPressed: {
+    opacity: 0.8,
+    backgroundColor: Colors.background,
+  },
+  barContent: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 12,
+  },
+  icon: {
+    width: 24,
+    height: 24,
+  },
+  barText: {
+    fontSize: 16,
+    fontFamily: FontFamily.semiBold,
+    color: Colors.darkText,
+  },
+});

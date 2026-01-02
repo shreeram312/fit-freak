@@ -142,7 +142,9 @@ export default function SignUpScreen() {
           )}
         </View>
 
-        <CustomButton text="Sign Up" onPress={handleSubmit(onSignUp)} />
+        <View style={styles.buttonContainer}>
+          <CustomButton text="Sign Up" onPress={handleSubmit(onSignUp)} />
+        </View>
 
         <View style={AuthStyle.linkContainer}>
           <Text style={AuthStyle.linkText}>Already have an account? </Text>
@@ -160,8 +162,6 @@ export default function SignUpScreen() {
         <View style={AuthStyle.socialContainer}>
           <View style={styles.socialButtons}>
             <SignInWith strategy="oauth_google" />
-            <SignInWith strategy="oauth_facebook" />
-            <SignInWith strategy="oauth_apple" />
           </View>
         </View>
       </ScrollView>
@@ -173,6 +173,9 @@ const styles = StyleSheet.create({
   scrollContent: {
     flexGrow: 1,
     justifyContent: "center",
+  },
+  buttonContainer: {
+    marginTop: 24,
   },
   socialButtons: {
     flexDirection: "row",
