@@ -5,6 +5,7 @@ import {
   Platform,
   View,
   ScrollView,
+  ActivityIndicator,
 } from "react-native";
 import CustomInput from "@/components/auth/custom-input";
 import CustomButton from "@/components/auth/custom-button";
@@ -15,6 +16,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { isClerkAPIResponseError, useSignUp } from "@clerk/clerk-expo";
 import SignInWith from "@/components/auth/sign-in-with";
 import { AuthStyle } from "@/assets/styles/auth-style";
+import axios from "axios";
+import { useState } from "react";
+import VerifyEmail from "@/components/auth/verify-email";
 
 const signUpSchema = z
   .object({
@@ -55,6 +59,8 @@ export default function SignUpScreen() {
   });
 
   const { signUp, isLoaded, setActive } = useSignUp();
+  const [isPendingVerification, setIsPendingVerification] = useState(false);
+  // const api = createPublicApiClient();
 
   const onSignUp = async (data: SignUpFields) => {
     if (!isLoaded) return;
@@ -65,15 +71,11 @@ export default function SignUpScreen() {
         password: data.password,
       });
 
-      await signUpAttempt.prepareEmailAddressVerification({
+      await signUp.prepareEmailAddressVerification({
         strategy: "email_code",
       });
 
-      // For now, we'll just activate the session if successful
-      // In a real app, you'd navigate to verify email screen
-      if (signUpAttempt.status === "complete") {
-        await setActive({ session: signUpAttempt.createdSessionId });
-      }
+      setIsPendingVerification(true);
     } catch (err) {
       console.log("Sign up error: ", JSON.stringify(err, null, 2));
 
@@ -89,6 +91,15 @@ export default function SignUpScreen() {
       }
     }
   };
+
+  if (isPendingVerification) {
+    return (
+      <VerifyEmail
+        email={signUp?.emailAddress || ""}
+        onBack={() => setIsPendingVerification(false)}
+      />
+    );
+  }
 
   return (
     <KeyboardAvoidingView

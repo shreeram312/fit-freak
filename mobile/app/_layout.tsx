@@ -2,8 +2,11 @@ import { Slot } from "expo-router";
 import { useFonts } from "expo-font";
 import { FontFamily } from "@/lib/constants";
 import { ClerkProvider } from "@clerk/clerk-expo";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { StatusBar } from "react-native";
 
 export default function RootLayout() {
+  const queryClient = new QueryClient();
   const [loaded, error] = useFonts({
     [FontFamily.black]: require("../assets/fonts/Montserrat-Black.ttf"),
     [FontFamily.blackItalic]: require("../assets/fonts/Montserrat-BlackItalic.ttf"),
@@ -33,7 +36,10 @@ export default function RootLayout() {
     <ClerkProvider
       publishableKey={process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY}
     >
-      <Slot />
+      <QueryClientProvider client={queryClient}>
+        <StatusBar barStyle="light-content" />
+        <Slot />
+      </QueryClientProvider>
     </ClerkProvider>
   );
 }

@@ -3,10 +3,14 @@ import * as WebBrowser from "expo-web-browser";
 import * as AuthSession from "expo-auth-session";
 import { useEffect, useCallback } from "react";
 import { useSSO } from "@clerk/clerk-expo";
+//@ts-ignore
 import googleButton from "@/assets/social-providers/google.png";
 import { Pressable, Image, Text, StyleSheet, View } from "react-native";
 import { router, useRouter } from "expo-router";
 import { Colors, FontFamily } from "@/lib/constants";
+import axios from "axios";
+
+const EXPO_BACKEND_API_URL = process.env.EXPO_BACKEND_API_URL;
 export const useWarmUpBrowser = () => {
   useEffect(() => {
     // Preloads the browser for Android devices to reduce authentication load time
@@ -49,9 +53,26 @@ export default function SignInWith({ strategy }: SignInWithProps) {
           redirectUrl: AuthSession.makeRedirectUri(),
         });
 
-      // If sign in was successful, set the active session
       if (createdSessionId) {
         setActive!({ session: createdSessionId });
+        console.log(
+          "createdSessionId",
+          JSON.stringify(createdSessionId, null, 2)
+        );
+
+        if (signUp?.status === "complete") {
+          console.log(
+            signUp?.emailAddress,
+            signUp.createdUserId,
+            signUp?.firstName + " " + signUp?.lastName
+          );
+          await axios.post(`${EXPO_BACKEND_API_URL}/api/auth/sign-up`, {
+            email: signUp?.emailAddress,
+            clerkId: signUp.createdUserId,
+            name: signUp?.firstName + " " + signUp?.lastName,
+          });
+        }
+
         router.push("/(tabs)");
       } else {
         // If there is no `createdSessionId`,

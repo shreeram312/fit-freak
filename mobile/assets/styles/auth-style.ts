@@ -76,7 +76,7 @@ export const AuthStyle = StyleSheet.create({
     color: Colors.primary,
   },
   socialContainer: {
-    marginTop: 32,
+    marginTop: 10,
     gap: 12,
   },
   divider: {
