@@ -1,5 +1,5 @@
 {
-  "id": "0d8cf276-8554-4a7b-9aa6-6babdc3745b8",
+  "id": "00d86598-977a-4a18-81ef-a57f812d5099",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -10,9 +10,10 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "serial",
+          "type": "uuid",
           "primaryKey": true,
-          "notNull": true
+          "notNull": true,
+          "default": "gen_random_uuid()"
         },
         "clerk_user_id": {
           "name": "clerk_user_id",

@@ -60,7 +60,6 @@ export default function SignUpScreen() {
 
   const { signUp, isLoaded, setActive } = useSignUp();
   const [isPendingVerification, setIsPendingVerification] = useState(false);
-  // const api = createPublicApiClient();
 
   const onSignUp = async (data: SignUpFields) => {
     if (!isLoaded) return;
