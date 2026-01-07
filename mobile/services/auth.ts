@@ -15,7 +15,7 @@ export const useCurrentUser = () => {
   });
 };
 
-export const useSignUp = () => {
+export const useSignUpAuth = () => {
   const apiClient = useApiClient();
 
   return useMutation({

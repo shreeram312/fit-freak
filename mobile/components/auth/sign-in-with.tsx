@@ -8,7 +8,7 @@ import googleButton from "@/assets/social-providers/google.png";
 import { Pressable, Image, Text, StyleSheet, View } from "react-native";
 import { router, useRouter } from "expo-router";
 import { Colors, FontFamily } from "@/lib/constants";
-import { useSignUp } from "@/services/auth";
+import { useSignUpAuth } from "@/services/auth";
 export const useWarmUpBrowser = () => {
   useEffect(() => {
     // Preloads the browser for Android devices to reduce authentication load time
@@ -38,7 +38,7 @@ export default function SignInWith({ strategy }: SignInWithProps) {
   // Use the `useSSO()` hook to access the `startSSOFlow()` method
   const { startSSOFlow } = useSSO();
   const router = useRouter();
-  const signUpMutation = useSignUp();
+  const signUpMutation = useSignUpAuth();
 
   const onPress = useCallback(async () => {
     try {
@@ -65,12 +65,12 @@ export default function SignInWith({ strategy }: SignInWithProps) {
             signUp.createdUserId,
             signUp?.firstName + " " + signUp?.lastName
           );
-          await signUpMutation.mutateAsync({
-            email: signUp?.emailAddress || "",
-            clerkId: signUp.createdUserId || "",
-            name: (signUp?.firstName || "") + " " + (signUp?.lastName || ""),
-          });
         }
+        await signUpMutation.mutateAsync({
+          email: signUp?.emailAddress || "",
+          clerkId: signUp?.createdUserId || "",
+          name: (signUp?.firstName || "") + " " + (signUp?.lastName || ""),
+        });
 
         router.push("/(tabs)");
       } else {

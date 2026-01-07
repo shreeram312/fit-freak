@@ -17,7 +17,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { router } from "expo-router";
-
+import { useSignUpAuth } from "@/services/auth";
 const verifyEmailSchema = z.object({
   code: z
     .string({ message: "Verification code is required" })
@@ -44,6 +44,7 @@ const VerifyEmail = ({ email, onBack }: VerifyEmailProps) => {
   });
 
   const [isResending, setIsResending] = useState(false);
+  const signUpMutation = useSignUpAuth();
 
   const onVerify = async (data: VerifyEmailFields) => {
     if (!isLoaded) return;
@@ -55,6 +56,11 @@ const VerifyEmail = ({ email, onBack }: VerifyEmailProps) => {
 
       if (result.status === "complete") {
         await setActive({ session: result.createdSessionId });
+        await signUpMutation.mutateAsync({
+          email: signUp?.emailAddress || "",
+          clerkId: signUp?.createdUserId || "",
+          name: "User",
+        });
         router.replace("/(tabs)");
       } else {
         setError("root", { message: "Verification could not be completed" });

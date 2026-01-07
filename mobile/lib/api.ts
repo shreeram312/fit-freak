@@ -6,11 +6,15 @@ export interface ApiResponse<T> {
   error?: string;
 }
 
+if (!process.env.EXPO_PUBLIC_BACKEND_API_URL) {
+  throw new Error("EXPO_BACKEND_API_URL is not set");
+}
+
 export const createApiClient = async (
   getToken: () => Promise<string | null>
 ) => {
   const api = axios.create({
-    baseURL: process.env.EXPO_BACKEND_API_URL,
+    baseURL: process.env.EXPO_PUBLIC_BACKEND_API_URL,
     timeout: 10000,
     headers: {
       "Content-Type": "application/json",
